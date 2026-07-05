@@ -1,6 +1,10 @@
+import { useState } from "react";
 import "./AddBatchForm.css";
+import availableProducts from "../../utils/products.json";
 
 export default function AddBatchForm({ onClose, onSubmit }) {
+  const [selectedProduct, setSelectedProduct] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -22,18 +26,28 @@ export default function AddBatchForm({ onClose, onSubmit }) {
         <h4 className="modal__title">Add New Batch</h4>
 
         <form className="modal__form" onSubmit={handleSubmit}>
-          <div className="modal__from-group">
+          <div className="modal__form-group">
             <label className="modal__form-label" htmlFor="product">
               Product
             </label>
-            <input
+            <select
               className="modal__form-input"
               type="text"
               id="product"
               name="product"
               required
-              autoComplete="off"
-            />
+              value={selectedProduct}
+              onChange={(e) => setSelectedProduct(e.target.value)}
+            >
+              <option value="">Select a product</option>
+              {availableProducts.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="modal__form-group">
             <label className="modal__form-label" htmlFor="batchNumber">
               Batch Number
             </label>
@@ -45,44 +59,44 @@ export default function AddBatchForm({ onClose, onSubmit }) {
               required
               autoComplete="off"
             />
-            <div className="modal__from-group">
-              <label className="modal__form-label" htmlFor="productionDate">
-                Production Date
-              </label>
-              <input
-                className="modal__form-input"
-                type="date"
-                id="productionDate"
-                name="productionDate"
-                required
-                autoComplete="off"
-              />
-              <div className="modal__from-group">
-                <label className="modal__form-label" htmlFor="quantity">
-                  Quantity
-                </label>
-                <input
-                  className="modal__form-input"
-                  type="number"
-                  id="quantity"
-                  name="quantity"
-                  required
-                  autoComplete="off"
-                />
-              </div>
-              <div className="modal__actions">
-                <button
-                  type="button"
-                  className="modal__form-cancel-button"
-                  onClick={onClose}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="modal__form-submit-button">
-                  Save Batch
-                </button>
-              </div>
-            </div>
+          </div>
+          <div className="modal__form-group">
+            <label className="modal__form-label" htmlFor="productionDate">
+              Production Date
+            </label>
+            <input
+              className="modal__form-input"
+              type="date"
+              id="productionDate"
+              name="productionDate"
+              required
+              autoComplete="off"
+            />
+          </div>
+          <div className="modal__form-group">
+            <label className="modal__form-label" htmlFor="quantity">
+              Quantity
+            </label>
+            <input
+              className="modal__form-input"
+              type="number"
+              id="quantity"
+              name="quantity"
+              required
+              autoComplete="off"
+            />
+          </div>
+          <div className="modal__actions">
+            <button type="submit" className="modal__form-submit-button">
+              Save Batch
+            </button>
+            <button
+              type="button"
+              className="modal__form-cancel-button"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
           </div>
         </form>
       </div>
