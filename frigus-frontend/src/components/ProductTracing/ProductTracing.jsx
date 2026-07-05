@@ -4,13 +4,39 @@ import AddBatchForm from "../AddBatchForm/AddBatchForm";
 
 export default function ProductTracing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [batches, setBatches] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleAddBatch = (batchData) => {
-    console.log("Batch data submitted", batchData);
+  const handleAddBatch = async (batchData) => {
+    setLoading(true);
+    setError(null);
 
-    // To-do: Add API calls here to save the batch info
+    try {
+      const response = await fetch("mongodb://localhost:27017/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          //Add Authorization headers here later
+        },
+        body: JSON.stringify(batchData),
+      });
 
-    setIsModalOpen(false);
+      if (!response.ok) {
+        throw new Error(`Failed to save: ${response.statusText}`);
+      }
+      const savedBatch = await response.json();
+
+      setBatches((prevBatches) => [savedBatch, ...prevBatches]);
+
+      console.log("Batch saved successfully:", savedBatch);
+      setIsModalOpen(false);
+    } catch (err) {
+      console.log("Error saving batch:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,8 +45,9 @@ export default function ProductTracing() {
       <button
         className="traceability__add-batch-button"
         onClick={() => setIsModalOpen(true)}
+        disabled={loading}
       >
-        Add Batch
+        {loading ? "Saving..." : "Add Batch"}
       </button>
 
       {isModalOpen && (
