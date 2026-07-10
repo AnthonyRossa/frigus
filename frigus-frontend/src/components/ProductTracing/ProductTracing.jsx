@@ -1,6 +1,7 @@
 import "./ProductTracing.css";
 import { useState } from "react";
 import AddBatchForm from "../AddBatchForm/AddBatchForm";
+import api from "../../utils/api";
 
 export default function ProductTracing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,19 +14,7 @@ export default function ProductTracing() {
     setError(null);
 
     try {
-      const response = await fetch("mongodb://localhost:27017/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          //Add Authorization headers here later
-        },
-        body: JSON.stringify(batchData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to save: ${response.statusText}`);
-      }
-      const savedBatch = await response.json();
+      const savedBatch = await api.createBatch(batchData);
 
       setBatches((prevBatches) => [savedBatch, ...prevBatches]);
 
@@ -33,7 +22,7 @@ export default function ProductTracing() {
       setIsModalOpen(false);
     } catch (err) {
       console.log("Error saving batch:", err);
-      setError(err.message);
+      setError(err.message || "Failed to save batch");
     } finally {
       setLoading(false);
     }
