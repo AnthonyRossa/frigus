@@ -20,14 +20,15 @@ const createBatch = async (req, res, next) => {
 
 const getBatches = async (req, res, next) => {
   try {
-    const batches = (await Batch.find()).toSorted({ createdAt: -1 });
-    res.json(batches);
+    const batches = await Batch.find();
+    const sortedBatches = batches.toSorted((a, b) => b.createdAt - a.createdAt);
+    res.json(sortedBatches);
   } catch (error) {
     next(error);
   }
 };
 
-const getBatchById = async (req, res, body) => {
+const getBatchById = async (req, res, next) => {
   try {
     const batch = await Batch.findById(req.params.id);
     if (!batch) {
@@ -39,8 +40,9 @@ const getBatchById = async (req, res, body) => {
   }
 };
 
-const updateBatch = async (req, res, body) => {
+const updateBatch = async (req, res, next) => {
   try {
+
     const { product, batchNumber, productionDate, quantity } = req.body;
 
     const updateData = {};
@@ -49,17 +51,17 @@ const updateBatch = async (req, res, body) => {
     if (productionDate) updateData.productionDate = new Date(productionDate);
     if (quantity !== undefined) updateData.quantity = quantity;
 
-    const updateBatch = await Batch.findByIdAndUpdate(
+    const updatedBatchResult = await Batch.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true, runValidators: true },
     );
 
-    if (!updatedBatch) {
+    if (!updatedBatchResult) {
       return res.status(404).json({ message: "Batch not found" });
     }
 
-    res.json(updatedBatch);
+    res.json(updatedBatchResult);
   } catch (error) {
     next(error);
   }

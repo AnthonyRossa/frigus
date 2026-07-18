@@ -18,6 +18,10 @@ app.use(cors({ origin: allowedOrigins }));
 app.use("/batches", batchRoutes);
 
 app.use((err, req, res, next) => {
+  console.error('==GLOBAL ERROR CAUGHT==');
+  console.error(err);
+  console.error("Stack", err.stack);
+
   if (err.name === "ValidationError" || err.name === "CelebrateError") {
     const message = err.details ? err.details[0].message : err.message;
     return res.status(400).json({
