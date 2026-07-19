@@ -1,0 +1,36 @@
+.traceability{
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.traceability__title{
+    font-size: 25px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.traceability__add-batch-button{
+    width: 200px;
+    margin: auto;
+    padding: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    border: 1px solid black;
+    border-radius: 6px;
+    margin-bottom: 7px;
+    cursor: pointer;
+}
+
+table{
+    table-layout: fixed;
+    justify-self: center;
+    width: 50%;
+}
+
+tr:hover{
+    cursor: pointer;
+    border: 1px solid black;
+}

@@ -2,6 +2,8 @@ import "./ProductTracing.css";
 import { useState, useEffect } from "react";
 import AddBatchForm from "../AddBatchForm/AddBatchForm";
 import api from "../../utils/api";
+import availableProducts from "../../utils/products.json";
+import { formatDate } from "../../utils/dateFormatter";
 
 export default function ProductTracing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,8 +43,13 @@ export default function ProductTracing() {
     }
   };
 
+  const getProductName = (productId) => {
+    const product = availableProducts.find((p) => p.id === productId);
+    return product ? product.name : "Unknown Product";
+  };
+
   return (
-    <>
+    <div className="traceability">
       <h3 className="traceability__title">Traceability</h3>
       <div className="traceability__error-message">{error}</div>
       <button
@@ -60,9 +67,9 @@ export default function ProductTracing() {
           <table className="traceability__table">
             <thead>
               <tr>
-                <th>Batch Number</th>
-                <th>Product ID</th>
                 <th>Production Date</th>
+                <th>Batch</th>
+                <th>Product</th>
                 <th>Quantity</th>
                 <th>Created At</th>
               </tr>
@@ -70,11 +77,11 @@ export default function ProductTracing() {
             <tbody>
               {batches.map((batch) => (
                 <tr key={batch._id}>
+                  <td>{formatDate(batch.productionDate)}</td>
                   <td>{batch.name}</td>
-                  <td>{batch.productId}</td>
-                  <td>{new Date(batch.productionDate).toLocaleDateString()}</td>
+                  <td>{getProductName(batch.productId)}</td>
                   <td>{batch.quantity}</td>
-                  <td>{new Date(batch.createdAt).toLocaleDateString()}</td>
+                  <td>{formatDate(batch.createdAt, true)}</td>
                 </tr>
               ))}
             </tbody>
@@ -88,6 +95,6 @@ export default function ProductTracing() {
           onSubmit={handleAddBatch}
         />
       )}
-    </>
+    </div>
   );
 }
