@@ -71,7 +71,7 @@ export default function AddBatchForm({ onClose, onSubmit }) {
               name="productionDate"
               required
               autoComplete="off"
-            />
+              />
           </div>
           <div className="modal__form-group">
             <label className="modal__form-label" htmlFor="quantity">

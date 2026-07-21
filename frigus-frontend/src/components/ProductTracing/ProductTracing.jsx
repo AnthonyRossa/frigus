@@ -2,8 +2,7 @@ import "./ProductTracing.css";
 import { useState, useEffect } from "react";
 import AddBatchForm from "../AddBatchForm/AddBatchForm";
 import api from "../../utils/api";
-import availableProducts from "../../utils/products.json";
-import { formatDate } from "../../utils/dateFormatter";
+import { getProductName } from "../../utils/utils";
 
 export default function ProductTracing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,23 +42,19 @@ export default function ProductTracing() {
     }
   };
 
-  const getProductName = (productId) => {
-    const product = availableProducts.find((p) => p.id === productId);
-    return product ? product.name : "Unknown Product";
-  };
-
   return (
     <div className="traceability">
+      {error && <div className="traceability__error-message">{error}</div>}
       <h3 className="traceability__title">Traceability</h3>
-      <div className="traceability__error-message">{error}</div>
-      <button
-        className="traceability__add-batch-button"
-        onClick={() => setIsModalOpen(true)}
-        disabled={loading}
-      >
-        {loading ? "Saving..." : "Add Batch"}
-      </button>
-
+      <div className="traceability__controls">
+        <button
+          className="traceability__add-batch-button"
+          onClick={() => setIsModalOpen(true)}
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "Add Batch"}
+        </button>
+      </div>
       <div className="traceability__batches-list">
         {batches.length === 0 ? (
           <p>No batches found. Add one above!</p>
@@ -77,11 +72,19 @@ export default function ProductTracing() {
             <tbody>
               {batches.map((batch) => (
                 <tr key={batch._id}>
-                  <td>{formatDate(batch.productionDate)}</td>
+                  <td>
+                    {batch.productionDate
+                      ? new Date(batch.productionDate).toLocaleDateString()
+                      : "-"}
+                  </td>
                   <td>{batch.name}</td>
                   <td>{getProductName(batch.productId)}</td>
                   <td>{batch.quantity}</td>
-                  <td>{formatDate(batch.createdAt, true)}</td>
+                  <td>
+                    {batch.createdAt
+                      ? new Date(batch.createdAt).toLocaleString()
+                      : "-"}
+                  </td>
                 </tr>
               ))}
             </tbody>

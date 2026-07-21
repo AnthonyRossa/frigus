@@ -1,36 +1,137 @@
-.traceability{
-    display: flex;
-    flex-direction: column;
-    justify-self: center;
-    text-align: center;
-    margin-top: 50px;
+.traceability {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.traceability__title{
-    font-size: 25px;
-    margin-bottom: 20px;
-    font-weight: bold;
+.traceability__error-message {
+  color: #d32f2f;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 0.9rem;
+  position: sticky;
+  top: 0;
+  z-index: 11;
 }
 
-.traceability__add-batch-button{
-    width: 200px;
-    margin: auto;
-    padding: 5px;
-    font-size: 15px;
-    font-weight: bold;
-    border: 1px solid black;
-    border-radius: 6px;
-    margin-bottom: 7px;
-    cursor: pointer;
+.traceability__title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 10;
+  padding: 10px 0;
 }
 
-table{
-    table-layout: fixed;
-    justify-self: center;
-    width: 50%;
+.traceability__controls {
+  position: sticky;
+  top: 60px;
+  z-index: 9;
+  background-color: #ffffff;
+  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-tr:hover{
-    cursor: pointer;
-    border: 1px solid black;
+.traceability__add-batch-button {
+  display: block;
+  margin: 0 auto 25px auto;
+  padding: 12px 24px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.traceability__add-batch-button:hover:not(:disabled) {
+  background-color: #1b5e20;
+  transform: translateY(-1px);
+}
+
+.traceability__add-batch-button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.traceability__batches-list {
+  max-height: 600px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 10px;
+}
+
+.traceability__table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  min-width: 600px;
+}
+
+.traceability__table thead {
+  position: sticky;
+  top: 0;
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #e0e0e0;
+  z-index: 5;
+}
+
+.traceability__table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.traceability__table tbody tr {
+  border-bottom: 1px solid #eeeeee;
+  transition: background-color 0.2s ease;
+}
+
+.traceability__table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.traceability__table tbody tr:hover {
+  background-color: #f0f4f8;
+  cursor: pointer;
+}
+
+.traceability__table td {
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.traceability__table td:first-child {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .traceability__table td,
+  .traceability__table th {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+  .traceability__add-batch-button {
+    width: 100%;
+  }
 }
