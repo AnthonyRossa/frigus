@@ -1,9 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./AddBatchForm.css";
-import availableProducts from "../../utils/products.json";
+import api from "../../utils/api";
 
 export default function AddBatchForm({ onClose, onSubmit }) {
   const [selectedProduct, setSelectedProduct] = useState("");
+  const [productsList, setProductsList] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await api.getAllProducts();
+        setProductsList(data);
+      } catch (err) {
+        console.error("Failed to load products", err);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,8 +53,8 @@ export default function AddBatchForm({ onClose, onSubmit }) {
               onChange={(e) => setSelectedProduct(e.target.value)}
             >
               <option value="">Select a product</option>
-              {availableProducts.map((item) => (
-                <option key={item.id} value={item.id}>
+              {productsList.map((item) => (
+                <option key={item._id} value={item._id}>
                   {item.name}
                 </option>
               ))}
@@ -71,7 +84,7 @@ export default function AddBatchForm({ onClose, onSubmit }) {
               name="productionDate"
               required
               autoComplete="off"
-              />
+            />
           </div>
           <div className="modal__form-group">
             <label className="modal__form-label" htmlFor="quantity">

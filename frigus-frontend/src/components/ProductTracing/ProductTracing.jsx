@@ -1,12 +1,15 @@
 import "./ProductTracing.css";
 import { useState, useEffect } from "react";
 import AddBatchForm from "../AddBatchForm/AddBatchForm";
+import ProcessDetail from "../ProcessDetail/ProcessDetail";
 import api from "../../utils/api";
 import { getProductName } from "../../utils/utils";
 
 export default function ProductTracing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [batches, setBatches] = useState([]);
+  const [productsList, setProductsList] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -21,7 +24,18 @@ export default function ProductTracing() {
       }
     };
 
+    const fetchProducts = async () => {
+      try {
+        const data = await api.getAllProducts();
+        setProductsList(data);
+        console.log("Loaded Products:", data);
+      } catch (err) {
+        console.error("Failed to load products:", err);
+      }
+    };
+
     fetchBatches();
+    fetchProducts();
   }, []);
 
   const handleAddBatch = async (batchData) => {
@@ -42,10 +56,28 @@ export default function ProductTracing() {
     }
   };
 
+  const getProductName = (productId) => {
+    if (!productId || !productsList) return "Unknown Product";
+
+    const product = productsList.find((p) => p._id === productId);
+
+    const productById = productsList.find((p) => p.id === productId);
+
+    return product
+      ? product.name
+      : productById
+        ? productById.name
+        : "Unknown Product";
+  };
+
+  const handleRowClick = (batch) => {
+    setSelectedBatch(batch);
+  };
+
   return (
     <div className="traceability">
-      {error && <div className="traceability__error-message">{error}</div>}
       <h3 className="traceability__title">Traceability</h3>
+
       <div className="traceability__controls">
         <button
           className="traceability__add-batch-button"
@@ -55,6 +87,7 @@ export default function ProductTracing() {
           {loading ? "Saving..." : "Add Batch"}
         </button>
       </div>
+      {error && <div className="traceability__error-message">{error}</div>}
       <div className="traceability__batches-list">
         {batches.length === 0 ? (
           <p>No batches found. Add one above!</p>

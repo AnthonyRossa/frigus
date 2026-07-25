@@ -34,6 +34,7 @@ class Api {
 
   // Endpoints
 
+  // --- Batch Methods ---
   createBatch(batchData) {
     return this._makeRequest("/batches", {
       method: "POST",
@@ -60,6 +61,15 @@ class Api {
     return this._makeRequest(`/batches/${id}`, {
       method: "DELETE",
     });
+  }
+
+  // --- Product Methods ---
+  getAllProducts() {
+    return this._makeRequest("/products");
+  }
+
+  getProductById(id) {
+    return this._makeRequest(`/products/${id}`);
   }
 }
 
