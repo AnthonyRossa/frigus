@@ -1,93 +1,90 @@
 import { useState, useEffect } from "react";
 import api from "../../utils/api";
+import "./ProcessDetail.css"
 
 export default function ProcessDetail({ batch }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (batch && batch.productId) {
-      const fetchProduct = async () => {
-        try {
-          const data = await api.getProductById(batch.productId);
-          setProduct(data);
-        } catch (err) {
-          console.error("Failed to fetch product details:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchProduct();
-    } else {
+    if (!batch || !batch.productId) {
       setProduct(null);
-      setLoading(false);
+      return;
     }
+    const fetchProductDetails = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await api.getProductById(batch.productId);
+        setProduct(data);
+      } catch (err) {
+        setError("Failed to load process details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductDetails();
   }, [batch]);
 
-  const renderSteps = (steps, level = 0) => {
+  if (!batch) {
     return (
-      <div style={{ marginLeft: level * 20, marginBottom: "15px" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            fontSize: "0.9rem",
-          }}
-        >
-          <tbody>
-            {steps.map((step, index) => (
-              <tr key={index} style={{ borderBottom: "1px solid #f0f0f0" }}>
-                <td
-                  style={{
-                    padding: "8px",
-                    textAlign: "left",
-                    fontWeight: "bold",
-                    color: "#555",
-                  }}
-                >
-                  {step.param}:
-                </td>
-                <td style={{ padding: "8px", color: "#333" }}>
-                  {step.value}{" "}
-                  <span style={{ color: "#888", fontSize: "0.85rem" }}>
-                    {step.unit || ""}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="traceability__empty-state">
+        <p>Click on a row to view process details.</p>
       </div>
+    );
+  }
+
+  if (loading)
+    return <div className="traceability__empty-state">Loading details...</div>;
+  if (error) return <div className="traceability__error-message">{error}</div>;
+  if (!product)
+    return (
+      <div className="traceability__empty-state">
+        Product details not found.
+      </div>
+    );
+
+  const renderSteps = (steps) => {
+    if (!steps || steps.length === 0) return <p>No steps defined.</p>;
+
+    return (
+      <table>
+        <tbody>
+          {steps.map((step, index) => (
+            <tr key={index}>
+              <td>{step.param}:</td>
+              <td>
+                {step.value} <span>{step.unit || ""}</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
   };
 
-  if (loading) return <div>Loading process details...</div>;
-  if (!product) return <div>Product details not found.</div>;
-
   return (
-    <div className="process-detail-container">
-      <h3 className="process-detail-title">
+    <div className="process-detail__container">
+      <h3 className="process-detail__title">
         Process Traceability: {product.name}
       </h3>
-      <p className="process-detail-batch-id">Batch: {batch.name}</p>
+      <p className="process-detail__batch-id">
+        Batch: <p>{batch.name}</p>
+      </p>
 
-      {product.processes.map((proc) => (
-        <div key={proc._id} className="process-section">
-          <h4 className="process-section-title">{proc.name}</h4>
-          {proc.description && (
-            <p
-              style={{
-                fontSize: "0.9rem",
-                color: "#666",
-                marginBottom: "10px",
-              }}
-            >
-              {proc.description}
-            </p>
-          )}
-          {renderSteps(proc.steps)}
-        </div>
-      ))}
+      {product.processes && product.processes.length > 0 ? (
+        product.processes.map((proc) => (
+          <div key={proc._id} className="process-detail__section">
+            <p className="process-detail__section-title">{proc.name}</p>
+            {proc.description && <p>{proc.description}</p>}
+            {renderSteps(proc.steps)}
+          </div>
+        ))
+      ) : (
+        <p>No processes defined for this product.</p>
+      )}
     </div>
   );
 }

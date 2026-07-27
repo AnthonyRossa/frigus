@@ -1,8 +1,13 @@
 .traceability {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 20px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.traceability__main-content{
+  display: flex;
+  min-width: 100%;
 }
 
 .traceability__error-message {

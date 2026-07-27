@@ -88,41 +88,48 @@ export default function ProductTracing() {
         </button>
       </div>
       {error && <div className="traceability__error-message">{error}</div>}
-      <div className="traceability__batches-list">
-        {batches.length === 0 ? (
-          <p>No batches found. Add one above!</p>
-        ) : (
-          <table className="traceability__table">
-            <thead>
-              <tr>
-                <th>Production Date</th>
-                <th>Batch</th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Created At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {batches.map((batch) => (
-                <tr key={batch._id}>
-                  <td>
-                    {batch.productionDate
-                      ? new Date(batch.productionDate).toLocaleDateString()
-                      : "-"}
-                  </td>
-                  <td>{batch.name}</td>
-                  <td>{getProductName(batch.productId)}</td>
-                  <td>{batch.quantity}</td>
-                  <td>
-                    {batch.createdAt
-                      ? new Date(batch.createdAt).toLocaleString()
-                      : "-"}
-                  </td>
+
+      <div className="traceability__main-content">
+        <div className="traceability__batches-list">
+          {batches.length === 0 ? (
+            <p>No batches found. Add one above!</p>
+          ) : (
+            <table className="traceability__table">
+              <thead>
+                <tr>
+                  <th>Production Date</th>
+                  <th>Batch</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Created At</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {batches.map((batch) => (
+                  <tr key={batch._id} onClick={() => handleRowClick(batch)}>
+                    <td>
+                      {batch.productionDate
+                        ? new Date(batch.productionDate).toLocaleDateString()
+                        : "-"}
+                    </td>
+                    <td>{batch.name}</td>
+                    <td>{getProductName(batch.productId)}</td>
+                    <td>{batch.quantity}</td>
+                    <td>
+                      {batch.createdAt
+                        ? new Date(batch.createdAt).toLocaleString()
+                        : "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className="traceability__side-panel">
+          <ProcessDetail batch={selectedBatch} />
+        </div>
       </div>
 
       {isModalOpen && (
