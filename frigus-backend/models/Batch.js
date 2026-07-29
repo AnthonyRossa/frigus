@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const ProcessStep = require("./ProcessStep");
 
 const batchSchema = new mongoose.Schema({
   name: {
@@ -25,12 +26,13 @@ const batchSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Batch = mongoose.model('Batch', batchSchema);
+const Batch = mongoose.model("Batch", batchSchema);
 
 module.exports = Batch;

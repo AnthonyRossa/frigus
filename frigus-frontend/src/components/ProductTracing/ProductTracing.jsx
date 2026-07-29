@@ -128,7 +128,14 @@ export default function ProductTracing() {
         </div>
 
         <div className="traceability__side-panel">
-          <ProcessDetail batch={selectedBatch} />
+          <ProcessDetail
+            batch={selectedBatch}
+            product={
+              selectedBatch
+                ? productsList.find((p) => p._id === selectedBatch.productId)
+                : null
+            }
+          />
         </div>
       </div>
 

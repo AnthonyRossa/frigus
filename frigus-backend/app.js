@@ -5,6 +5,7 @@ const PORT = 3001;
 const cors = require("cors");
 const batchRoutes = require("./routes/Batch");
 const productRoutes = require("./routes/productRoutes");
+const ProcessLogRoutes = require("./routes/ProcessLogRoutes");
 
 const allowedOrigins = ["http://localhost:3001", "http://localhost:3000"];
 
@@ -18,6 +19,7 @@ app.use(cors({ origin: allowedOrigins }));
 
 app.use("/batches", batchRoutes);
 app.use("/products", productRoutes);
+app.use("/process-logs", ProcessLogRoutes);
 
 app.use((err, req, res, next) => {
   console.error("==GLOBAL ERROR CAUGHT==");
