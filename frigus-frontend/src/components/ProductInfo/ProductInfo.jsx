@@ -7,14 +7,6 @@ export default function ProcessDetail({ batch, product }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log("🔍 ProcessDetail: Batch received", batch);
-    console.log("🔍 ProcessDetail: Product received", product);
-    if (product) {
-      console.log("🔍 ProcessDetail: Product processes", product.processes);
-    }
-  }, [batch, product]);
-
-  useEffect(() => {
     if (!batch || !product) return;
 
     const fetchLogs = async () => {

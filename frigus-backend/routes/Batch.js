@@ -18,10 +18,7 @@ router.get(
   "/:id",
   celebrate({
     params: Joi.object().keys({
-      id: Joi.string().hex().length(24).required().messages({
-        "string.hex": "Invalid ID format",
-        "string.lenght": "ID must be 24 characters",
-      }),
+      id: Joi.string().hex().length(24).required(),
     }),
   }),
   getBatchById,
@@ -32,24 +29,10 @@ router.post(
   "/",
   celebrate({
     body: Joi.object().keys({
-      product: Joi.string()
-        .required()
-        .messages({ "any.required": "Product ID is required" }),
-      batchNumber: Joi.string()
-        .min(2)
-        .max(50)
-        .trim()
-        .required()
-        .messages({ "any.required": "Batch Number is required" }),
-      productionDate: Joi.date()
-        .iso()
-        .required()
-        .messages({ "date.base": "Valid date required" }),
-      quantity: Joi.number()
-        .integer()
-        .min(1)
-        .required()
-        .messages({ "number.base": "Quantity is required" }),
+      product: Joi.string().required(),
+      batchNumber: Joi.number().min(1).required(),
+      productionDate: Joi.date().iso().required(),
+      quantity: Joi.number().integer().min(1).required(),
     }),
   }),
   createBatch,
@@ -65,12 +48,11 @@ router.patch(
     body: Joi.object()
       .keys({
         product: Joi.string().optional(),
-        batchNumber: Joi.string().min(2).max(50).trim().optional(),
+        batchNumber: Joi.number().min(1).optional(),
         productionDate: Joi.date().iso().optional(),
         quantity: Joi.number().integer().min(1).optional(),
       })
-      .min(1)
-      .messages({ "object.min": "At least one field to update" }),
+      .min(1),
   }),
   updateBatch,
 );

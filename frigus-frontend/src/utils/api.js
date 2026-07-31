@@ -62,27 +62,6 @@ class Api {
       method: "DELETE",
     });
   }
-
-  // --- Product Methods ---
-  getAllProducts() {
-    return this._makeRequest("/products");
-  }
-
-  getProductById(id) {
-    return this._makeRequest(`/products/${id}`);
-  }
-
-  // ---Process Logs---
-  createProcessLog(logData) {
-    return this._makeRequest("/process-logs", {
-      method: "POST",
-      body: JSON.stringify(logData),
-    });
-  }
-
-  getProcessLogsByBatch(batchId){
-    return this._makeRequest(`/process-logs/batch/${batchId}`);
-  }
 }
 
 const api = new Api({

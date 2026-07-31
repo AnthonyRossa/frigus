@@ -1,8 +1,9 @@
 import "./ProductTracing.css";
 import { useState, useEffect } from "react";
 import AddBatchForm from "../AddBatchForm/AddBatchForm";
-import ProcessDetail from "../ProcessDetail/ProcessDetail";
+//import ProductInfo from "../ProductInfo/ProductInfo";
 import api from "../../utils/api";
+import availableProducts from "../../utils/products.json"
 import { getProductName } from "../../utils/utils";
 
 export default function ProductTracing() {
@@ -24,18 +25,7 @@ export default function ProductTracing() {
       }
     };
 
-    const fetchProducts = async () => {
-      try {
-        const data = await api.getAllProducts();
-        setProductsList(data);
-        console.log("Loaded Products:", data);
-      } catch (err) {
-        console.error("Failed to load products:", err);
-      }
-    };
-
     fetchBatches();
-    fetchProducts();
   }, []);
 
   const handleAddBatch = async (batchData) => {
@@ -54,20 +44,6 @@ export default function ProductTracing() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getProductName = (productId) => {
-    if (!productId || !productsList) return "Unknown Product";
-
-    const product = productsList.find((p) => p._id === productId);
-
-    const productById = productsList.find((p) => p.id === productId);
-
-    return product
-      ? product.name
-      : productById
-        ? productById.name
-        : "Unknown Product";
   };
 
   const handleRowClick = (batch) => {
@@ -112,8 +88,8 @@ export default function ProductTracing() {
                         ? new Date(batch.productionDate).toLocaleDateString()
                         : "-"}
                     </td>
-                    <td>{batch.name}</td>
-                    <td>{getProductName(batch.productId)}</td>
+                    <td>{batch.batchNumber}</td>
+                    <td>{getProductName(batch.productId, availableProducts)}</td>
                     <td>{batch.quantity}</td>
                     <td>
                       {batch.createdAt
@@ -128,14 +104,6 @@ export default function ProductTracing() {
         </div>
 
         <div className="traceability__side-panel">
-          <ProcessDetail
-            batch={selectedBatch}
-            product={
-              selectedBatch
-                ? productsList.find((p) => p._id === selectedBatch.productId)
-                : null
-            }
-          />
         </div>
       </div>
 

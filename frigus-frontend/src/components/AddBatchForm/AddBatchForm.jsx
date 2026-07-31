@@ -1,22 +1,13 @@
 import { useState, useEffect } from "react";
 import "./AddBatchForm.css";
 import api from "../../utils/api";
+import availableProducts from "../../utils/products.json";
+
 
 export default function AddBatchForm({ onClose, onSubmit }) {
   const [selectedProduct, setSelectedProduct] = useState("");
   const [productsList, setProductsList] = useState([]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await api.getAllProducts();
-        setProductsList(data);
-      } catch (err) {
-        console.error("Failed to load products", err);
-      }
-    };
-    fetchProducts();
-  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -53,8 +44,8 @@ export default function AddBatchForm({ onClose, onSubmit }) {
               onChange={(e) => setSelectedProduct(e.target.value)}
             >
               <option value="">Select a product</option>
-              {productsList.map((item) => (
-                <option key={item._id} value={item._id}>
+              {availableProducts.map((item) => (
+                <option key={item.id} value={item.id}>
                   {item.name}
                 </option>
               ))}

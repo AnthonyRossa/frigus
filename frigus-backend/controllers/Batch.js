@@ -5,7 +5,7 @@ const createBatch = async (req, res, next) => {
     const { product, batchNumber, productionDate, quantity } = req.body;
 
     const newBatch = new Batch({
-      name: batchNumber,
+      batchNumber: batchNumber,
       productId: product,
       productionDate: new Date(productionDate),
       quantity: quantity,
