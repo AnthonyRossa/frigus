@@ -28,6 +28,7 @@ const batchSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
 });
 
 const Batch = mongoose.model("Batch", batchSchema);

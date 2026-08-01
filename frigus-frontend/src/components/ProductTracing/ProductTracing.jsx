@@ -1,18 +1,19 @@
 import "./ProductTracing.css";
 import { useState, useEffect } from "react";
 import AddBatchForm from "../AddBatchForm/AddBatchForm";
-//import ProductInfo from "../ProductInfo/ProductInfo";
+import ProductInfo from "../ProductInfo/ProductInfo";
 import api from "../../utils/api";
 import availableProducts from "../../utils/products.json"
 import { getProductName } from "../../utils/utils";
+import { BatchProvider, useBatch } from "../../contexts/BatchContext.jsx";
 
 export default function ProductTracing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [batches, setBatches] = useState([]);
   const [productsList, setProductsList] = useState([]);
-  const [selectedBatch, setSelectedBatch] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { selectedBatch, setSelectedBatch } = useBatch();
 
   useEffect(() => {
     const fetchBatches = async () => {
@@ -77,7 +78,7 @@ export default function ProductTracing() {
                   <th>Batch</th>
                   <th>Product</th>
                   <th>Quantity</th>
-                  <th>Created At</th>
+                  <th>Supervisor</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,9 +93,7 @@ export default function ProductTracing() {
                     <td>{getProductName(batch.productId, availableProducts)}</td>
                     <td>{batch.quantity}</td>
                     <td>
-                      {batch.createdAt
-                        ? new Date(batch.createdAt).toLocaleString()
-                        : "-"}
+                      username
                     </td>
                   </tr>
                 ))}
@@ -104,6 +103,7 @@ export default function ProductTracing() {
         </div>
 
         <div className="traceability__side-panel">
+          <ProductInfo />
         </div>
       </div>
 

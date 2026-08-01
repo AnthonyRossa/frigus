@@ -1,5 +1,20 @@
 [
-  { "id": "p001", "name": "Linguiça de Carne Suína Defumda" },
+  {
+    "id": "p001",
+    "name": "Linguiça de Carne Suína Defumada",
+    "productionSteps": [
+      {
+        "key": "meatTemperature",
+        "label": "Meat Temperature (°C)",
+        "type": "number"
+      },
+      {
+        "key": "cureSaltAmount",
+        "label": "Cure Salt Amount (g)",
+        "type": "number"
+      }
+    ]
+  },
   { "id": "p002", "name": "Bacon em Pedaços" },
   { "id": "p003", "name": "Costelinha salgada e defumada" },
   { "id": "p004", "name": "Linguiça Toscana" }
