@@ -51,6 +51,23 @@ export default function ProductTracing() {
     setSelectedBatch(batch);
   };
 
+  const formatQuantity = (quantity) => {
+    const value = Number(quantity);
+    return Number.isFinite(value) ? value.toFixed(3) : "-";
+  };
+
+  const hasProductionData = (batch) =>
+    batch.productionData && Object.keys(batch.productionData).length > 0;
+
+  const handleBatchUpdate = (updatedBatch) => {
+    setBatches((prevBatches) =>
+      prevBatches.map((batch) =>
+        batch._id === updatedBatch._id ? updatedBatch : batch,
+      ),
+    );
+    setSelectedBatch(updatedBatch);
+  };
+
   return (
     <div className="traceability">
       <h3 className="traceability__title">Traceability</h3>
@@ -77,7 +94,8 @@ export default function ProductTracing() {
                   <th>Production Date</th>
                   <th>Batch</th>
                   <th>Product</th>
-                  <th>Quantity</th>
+                  <th>Quantity (Kg)</th>
+                  <th>Status</th>
                   <th>Supervisor</th>
                 </tr>
               </thead>
@@ -91,7 +109,18 @@ export default function ProductTracing() {
                     </td>
                     <td>{batch.batchNumber}</td>
                     <td>{getProductName(batch.productId, availableProducts)}</td>
-                    <td>{batch.quantity}</td>
+                    <td>{formatQuantity(batch.quantity)}</td>
+                    <td>
+                      {hasProductionData(batch) ? (
+                        <span className="traceability__status-badge traceability__status-badge--saved">
+                          Saved
+                        </span>
+                      ) : (
+                        <span className="traceability__status-badge traceability__status-badge--pending">
+                          Pending
+                        </span>
+                      )}
+                    </td>
                     <td>
                       username
                     </td>
@@ -103,7 +132,7 @@ export default function ProductTracing() {
         </div>
 
         <div className="traceability__side-panel">
-          <ProductInfo />
+          <ProductInfo onBatchUpdate={handleBatchUpdate} />
         </div>
       </div>
 
@@ -111,6 +140,7 @@ export default function ProductTracing() {
         <AddBatchForm
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddBatch}
+          batches={batches}
         />
       )}
     </div>

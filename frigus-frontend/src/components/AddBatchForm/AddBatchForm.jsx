@@ -1,28 +1,59 @@
 import { useState, useEffect } from "react";
 import "./AddBatchForm.css";
-import api from "../../utils/api";
 import availableProducts from "../../utils/products.json";
 
 
-export default function AddBatchForm({ onClose, onSubmit }) {
+export default function AddBatchForm({ onClose, onSubmit, batches }) {
   const [selectedProduct, setSelectedProduct] = useState("");
-  const [productsList, setProductsList] = useState([]);
+  const [batchNumber, setBatchNumber] = useState("");
 
+  const getNextBatchNumber = (productId) => {
+    const productBatches = (batches || []).filter(
+      (batch) => batch.productId === productId,
+    );
+
+    if (productBatches.length === 0) {
+      return 1;
+    }
+
+    const maxBatchNumber = Math.max(
+      ...productBatches.map((batch) => Number(batch.batchNumber) || 0),
+    );
+
+    return maxBatchNumber + 1;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
-    onSubmit(data);
+    const batchPayload = {
+      ...data,
+      batchNumber: Number(data.batchNumber),
+      quantity: Number(data.quantity),
+    };
+
+    onSubmit(batchPayload);
   };
+
 
   const handleContentClick = (e) => {
     e.stopPropagation();
   };
 
+  useEffect(() => {
+    if (!selectedProduct) {
+      setBatchNumber("");
+      return;
+    }
+
+    const nextNumber = getNextBatchNumber(selectedProduct);
+    setBatchNumber(nextNumber.toString());
+  }, [selectedProduct, batches]);
+
   return (
-    <div className="modal__overlay" onClick={onClose}>
+    <div className="modal__overlay">
       <div className="modal__content" onClick={handleContentClick}>
         <button className="modal__close" onClick={onClose}>
           X
@@ -57,11 +88,15 @@ export default function AddBatchForm({ onClose, onSubmit }) {
             </label>
             <input
               className="modal__form-input"
-              type="text"
+              type="number"
+              step="1"
+              min="1"
               id="batchNumber"
               name="batchNumber"
               required
               autoComplete="off"
+              value={batchNumber}
+              onChange={(e) => setBatchNumber(e.target.value)}
             />
           </div>
           <div className="modal__form-group">
@@ -84,6 +119,8 @@ export default function AddBatchForm({ onClose, onSubmit }) {
             <input
               className="modal__form-input"
               type="number"
+              step="0.001"
+              min="0.001"
               id="quantity"
               name="quantity"
               required

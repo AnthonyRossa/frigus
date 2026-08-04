@@ -5,15 +5,20 @@ const createBatch = async (req, res, next) => {
     const { product, batchNumber, productionDate, quantity } = req.body;
 
     const newBatch = new Batch({
-      batchNumber: batchNumber,
+      batchNumber: Number(batchNumber),
       productId: product,
       productionDate: new Date(productionDate),
-      quantity: quantity,
+      quantity: Number(quantity),
     });
 
     const savedBatch = await newBatch.save();
     res.status(201).json(savedBatch);
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: "Batch number already exists for this product.",
+      });
+    }
     next(error);
   }
 };
@@ -42,14 +47,23 @@ const getBatchById = async (req, res, next) => {
 
 const updateBatch = async (req, res, next) => {
   try {
-
-    const { product, batchNumber, productionDate, quantity } = req.body;
+    const {
+      product,
+      batchNumber,
+      productionDate,
+      quantity,
+      productionData,
+    } = req.body;
 
     const updateData = {};
-    if (batchNumber) updateData.name = batchNumber;
+    if (batchNumber !== undefined) updateData.batchNumber = batchNumber;
     if (product) updateData.productId = product;
     if (productionDate) updateData.productionDate = new Date(productionDate);
-    if (quantity !== undefined) updateData.quantity = quantity;
+    if (quantity !== undefined) updateData.quantity = Number(quantity);
+    if (productionData !== undefined) {
+      updateData.productionData = productionData;
+      updateData.savedAt = new Date();
+    }
 
     const updatedBatchResult = await Batch.findByIdAndUpdate(
       req.params.id,

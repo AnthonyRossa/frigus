@@ -10,12 +10,87 @@
       },
       {
         "key": "cureSaltAmount",
-        "label": "Cure Salt Amount (g)",
+        "label": "Cure Salt Amount (Kg)",
+        "type": "number"
+      },
+      {
+        "key": "meatAmount",
+        "label": "Meat Amount (Kg)",
+        "type": "number"
+      },
+      {
+        "key": "fatAmount",
+        "label": "Fat Amount (Kg)",
         "type": "number"
       }
     ]
   },
-  { "id": "p002", "name": "Bacon em Pedaços" },
-  { "id": "p003", "name": "Costelinha salgada e defumada" },
-  { "id": "p004", "name": "Linguiça Toscana" }
+  {
+    "id": "p002",
+    "name": "Bacon em Pedaços",
+    "productionSteps": [
+      {
+        "key": "saltingTemperature",
+        "label": "Salting Temperature (°C)",
+        "type": "number"
+      },
+      {
+        "key": "cureSaltAmount",
+        "label": "Cure Salt Amount (Kg)",
+        "type": "number"
+      },
+      {
+        "key": "smokingTemp",
+        "label": "Smoking Temp (°C)",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "id": "p003",
+    "name": "Costelinha salgada e defumada",
+    "productionSteps": [
+      {
+        "key": "saltingTemperature",
+        "label": "Salting Temperature (°C)",
+        "type": "number"
+      },
+      {
+        "key": "cureSaltAmount",
+        "label": "Cure Salt Amount (Kg)",
+        "type": "number"
+      },
+      {
+        "key": "smokingTemp",
+        "label": "Smoking Temp (°C)",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "id": "p004",
+    "name": "Linguiça Toscana",
+    "productionSteps": [
+      {
+        "key": "mixingTemperature",
+        "label": "Mixing Temperature (°C)",
+        "type": "number"
+      },
+      {
+        "key": "cureSaltAmount",
+        "label": "Cure Salt Amount (Kg)",
+        "type": "number"
+      },
+      {
+        "key": "meatAmount",
+        "label": "Meat Amount (Kg)",
+        "type": "number"
+      },
+      {
+        "key": "fatAmount",
+        "label": "Fat Amount (Kg)",
+        "type": "number"
+      }
+    ]
+  }
 ]

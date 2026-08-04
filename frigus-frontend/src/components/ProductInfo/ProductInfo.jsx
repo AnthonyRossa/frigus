@@ -5,12 +5,17 @@ import "./ProductInfo.css";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
 
-export default function ProductInfo() {
+export default function ProductInfo({ onBatchUpdate }) {
   const { selectedBatch, setSelectedBatch } = useBatch();
   const [productDetails, setProductDetails] = useState(null);
   const [formData, setFormData] = useState({});
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
+
+  const hasSavedProductionData =
+    selectedBatch &&
+    selectedBatch.productionData &&
+    Object.keys(selectedBatch.productionData).length > 0;
 
   useEffect(() => {
     if (!selectedBatch) {
@@ -28,7 +33,10 @@ export default function ProductInfo() {
     const initialData = {};
     if (product?.productionSteps) {
       product.productionSteps.forEach((step) => {
-        initialData[step.key] = selectedBatch[step.key] || "";
+        initialData[step.key] =
+          selectedBatch.productionData?.[step.key] ??
+          selectedBatch[step.key] ??
+          "";
       });
     }
     setFormData(initialData);
@@ -47,7 +55,9 @@ export default function ProductInfo() {
     setIsSaving(true);
     try {
       const updatePayload = {
-        ...formData,
+        productionData: {
+          ...formData,
+        },
       };
 
       const updatedBatch = await api.updateBatch(
@@ -55,10 +65,15 @@ export default function ProductInfo() {
         updatePayload,
       );
 
-      setSelectedBatch(updatedBatch);
+      if (onBatchUpdate) {
+        onBatchUpdate(updatedBatch);
+      } else {
+        setSelectedBatch(updatedBatch);
+      }
       console.log("Production details saved successfully!", updatedBatch);
     } catch (err) {
       console.error("Failed to save details:", err);
+      setError("Failed to save production details. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -78,8 +93,11 @@ export default function ProductInfo() {
 
   return (
     <div className="product-info">
-      <h3 className="product-info__title">{productDetails.name}</h3>
-      <p className="product-info__batch">Batch: {selectedBatch.batchNumber}</p>
+      <div className="product-info__header">
+        <span className="product-info__header-label">Batch details</span>
+        <h3 className="product-info__title">{productDetails.name}</h3>
+        <p className="product-info__batch">Batch: {selectedBatch.batchNumber}</p>
+      </div>
 
       <div className="product-info__section">
         <h4>Production Data</h4>
@@ -92,24 +110,33 @@ export default function ProductInfo() {
                 <label htmlFor={step.key} className="product-info__label">
                   {step.label}
                 </label>
-                <input
-                  id={step.key}
-                  type={step.type}
-                  className="product-info__input"
-                  placeholder={step.placeholder}
-                  value={formData[step.key] || ""}
-                  onChange={(e) => handleInputChange(step.key, e.target.value)}
-                />
+                {hasSavedProductionData ? (
+                  <p className="product-info__value">
+                    {selectedBatch.productionData?.[step.key] ?? "-"}
+                  </p>
+                ) : (
+                  <input
+                    id={step.key}
+                    type={step.type}
+                    className="product-info__input"
+                    step="0.001"
+                    placeholder={step.placeholder}
+                    value={formData[step.key] || ""}
+                    onChange={(e) => handleInputChange(step.key, e.target.value)}
+                  />
+                )}
               </div>
             ))}
 
-            <button
-              className="product-info__save-btn"
-              onClick={handleSave}
-              disabled={isSaving}
-            >
-              {isSaving ? "Saving..." : "Save Production Data"}
-            </button>
+            {!hasSavedProductionData && (
+              <button
+                className="product-info__save-btn"
+                onClick={handleSave}
+                disabled={isSaving}
+              >
+                {isSaving ? "Saving..." : "Save Production Data"}
+              </button>
+            )}
           </div>
         ) : (
           <p className="product-info__no-steps">
@@ -119,10 +146,14 @@ export default function ProductInfo() {
       </div>
       <p className="product-info__time">
         Registered at:{" "}
-        {selectedBatch.productionDate
-          ? new Date(selectedBatch.productionDate).toLocaleString()
+        {selectedBatch.createdAt
+          ? new Date(selectedBatch.createdAt).toLocaleString()
           : "-"}
-      </p>
-    </div>
+      </p>      {selectedBatch.savedAt && (
+        <p className="product-info__time">
+          Saved at: {" "}
+          {new Date(selectedBatch.savedAt).toLocaleString()}
+        </p>
+      )}    </div>
   );
 }

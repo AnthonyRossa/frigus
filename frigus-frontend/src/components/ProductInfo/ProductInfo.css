@@ -1,7 +1,7 @@
 .product-info {
-  padding: 20px;
-  background: #f9f9f9;
-  border-left: 1px solid #ddd;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
   height: 100%;
   overflow-y: auto;
 }
@@ -10,6 +10,23 @@
   margin-top: 0;
   font-size: 1.2rem;
   color: #333;
+}
+
+.product-info__header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.product-info__header-label {
+  align-self: flex-start;
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: bolder;
 }
 
 .product-info__batch {
@@ -31,31 +48,45 @@
 .product-info__step-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 .product-info__label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #444;
 }
 
 .product-info__input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 12px;
+  border: 1px solid #d3d7db;
+  border-radius: 10px;
   font-size: 1rem;
+  background-color: #fbfcfd;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-info__input:focus {
+  outline: none;
+  border-color: #8ab4ff;
+  box-shadow: 0 0 0 3px rgba(138, 180, 255, 0.18);
 }
 
 .product-info__save-btn {
   margin-top: 15px;
-  padding: 10px;
+  padding: 12px 18px;
   background-color: #28a745;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.product-info__save-btn:hover:not(:disabled) {
+  background-color: #239134;
+  transform: translateY(-1px);
 }
 
 .product-info__save-btn:disabled {
@@ -63,11 +94,25 @@
   cursor: not-allowed;
 }
 
+.product-info__value {
+  padding: 12px 14px;
+  background: #f7f8fa;
+  border: 1px solid #e3e6ea;
+  border-radius: 10px;
+  color: #202020;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
 .product-info__no-steps {
   font-style: italic;
   color: #888;
 }
 
-.product-info__time{
-  margin-top: 10px;
+.product-info__time {
+  margin-top: 14px;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }

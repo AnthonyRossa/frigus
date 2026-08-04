@@ -9,6 +9,30 @@
 .traceability__main-content{
   display: flex;
   min-width: 100%;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.traceability__batches-list {
+  flex: 1;
+  min-width: 0;
+  max-height: 600px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 10px;
+}
+
+.traceability__side-panel {
+  flex: 0 0 380px;
+  min-width: 320px;
+  max-height: 760px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e6e6e6;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+  align-self: stretch;
 }
 
 .traceability__error-message {
@@ -125,6 +149,28 @@
   padding: 14px 16px;
   font-size: 0.95rem;
   vertical-align: middle;
+}
+
+.traceability__status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.traceability__status-badge--saved {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.traceability__status-badge--pending {
+  background-color: #fff8e1;
+  color: #f9a825;
 }
 
 .traceability__table td:first-child {

@@ -16,7 +16,15 @@ const batchSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     required: true,
-    trim: true,
+  },
+
+  productionData: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {},
+  },
+
+  savedAt: {
+    type: Date,
   },
 
   productionDate: {
@@ -28,8 +36,9 @@ const batchSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-
 });
+
+batchSchema.index({ productId: 1, batchNumber: 1 }, { unique: true });
 
 const Batch = mongoose.model("Batch", batchSchema);
 
