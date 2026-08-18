@@ -1,111 +1,93 @@
 .traceability {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  justify-self: center
+  padding: 20px 16px 24px;
+  font-family: inherit;
 }
 
-.traceability__main-content{
+.traceability__main-content {
   display: flex;
-  min-width: 100%;
-  gap: 30px;
+  gap: 20px;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .traceability__batches-list {
-  flex: 1;
+  flex: 1 1 640px;
   min-width: 0;
-  max-height: 600px;
-  overflow-y: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  padding: 12px;
+  overflow: hidden;
 }
 
 .traceability__side-panel {
-  flex: 0 0 380px;
+  flex: 0 1 380px;
   min-width: 320px;
   max-height: 760px;
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1px solid #e6e6e6;
-  padding: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.04);
+  padding: 18px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
   align-self: stretch;
 }
 
 .traceability__error-message {
-  color: #d32f2f;
-  background-color: #ffebee;
-  border: 1px solid #ffcdd2;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 15px;
+  color: #b42318;
+  background-color: #fef3f2;
+  border: 1px solid #fecdca;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 12px 0 16px;
   text-align: center;
-  font-size: 0.9rem;
-  position: sticky;
-  top: 0;
-  z-index: 11;
+  font-size: 0.95rem;
 }
 
 .traceability__title {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 2.5rem;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  background-color: #ffffff;
-  z-index: 10;
-  padding: 10px 0;
+  text-align: left;
+  margin: 0 0 8px;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: #102a43;
+}
+
+.traceability__subtitle {
+  margin: 0 0 16px;
+  color: #52606d;
+  font-size: 0.95rem;
 }
 
 .traceability__controls {
-  position: sticky;
-  top: 60px;
-  z-index: 9;
-  background-color: #ffffff;
-  padding-bottom: 15px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
 }
 
 .traceability__add-batch-button {
-  display: block;
-  margin: 0 auto 25px auto;
-  padding: 12px 24px;
-  background-color: #2e7d32;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #2f855a 0%, #3182ce 100%);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 18px rgba(49, 130, 206, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .traceability__add-batch-button:hover:not(:disabled) {
-  background-color: #1b5e20;
   transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(49, 130, 206, 0.24);
 }
 
 .traceability__add-batch-button:disabled {
-  background-color: #a5d6a7;
+  opacity: 0.75;
   cursor: not-allowed;
   transform: none;
-}
-
-.traceability__batches-list {
-  max-height: 600px;
-  overflow-y: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-top: 10px;
 }
 
 .traceability__table {
@@ -116,37 +98,35 @@
 }
 
 .traceability__table thead {
-  position: sticky;
-  top: 0;
-  background-color: #f5f5f5;
-  border-bottom: 2px solid #e0e0e0;
-  z-index: 5;
+  background-color: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .traceability__table th {
-  padding: 16px;
+  padding: 14px 12px;
   text-align: left;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.04em;
+  color: #475569;
 }
 
 .traceability__table tbody tr {
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #eef2f7;
   transition: background-color 0.2s ease;
 }
 
 .traceability__table tbody tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: #fbfdff;
 }
 
 .traceability__table tbody tr:hover {
-  background-color: #f0f4f8;
+  background-color: #f3f8ff;
   cursor: pointer;
 }
 
 .traceability__table td {
-  padding: 14px 16px;
+  padding: 12px;
   font-size: 0.95rem;
   vertical-align: middle;
 }
@@ -157,7 +137,7 @@
   justify-content: center;
   padding: 4px 10px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -175,15 +155,110 @@
 
 .traceability__table td:first-child {
   font-weight: 600;
+  color: #102a43;
 }
 
-@media (max-width: 768px) {
-  .traceability__table td,
-  .traceability__table th {
-    padding: 10px 12px;
-    font-size: 0.85rem;
+.traceability__empty-state {
+  padding: 16px 8px;
+  color: #64748b;
+  font-style: italic;
+}
+
+.traceability__mobile-batches {
+  display: none;
+}
+
+.traceability__batch-card {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
+}
+
+.traceability__batch-card.is-active {
+  border-color: #3182ce;
+  box-shadow: 0 10px 20px rgba(49, 130, 206, 0.16);
+}
+
+.traceability__batch-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.traceability__batch-card-title {
+  margin: 0 0 2px;
+  font-weight: 700;
+  color: #102a43;
+}
+
+.traceability__batch-card-date {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.traceability__batch-card-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+  font-size: 0.9rem;
+  gap: 8px;
+}
+
+@media (max-width: 900px) {
+  .traceability__main-content {
+    flex-direction: column;
   }
+
+  .traceability__side-panel {
+    width: 100%;
+    max-width: none;
+    order: 2;
+  }
+
+  .traceability__batches-list {
+    order: 1;
+  }
+}
+
+@media (max-width: 760px) {
+  .traceability {
+    padding: 14px 12px 20px;
+  }
+
+  .traceability__title,
+  .traceability__subtitle {
+    text-align: center;
+  }
+
+  .traceability__controls {
+    justify-content: center;
+  }
+
   .traceability__add-batch-button {
     width: 100%;
+  }
+
+  .traceability__table {
+    display: none;
+  }
+
+  .traceability__mobile-batches {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .traceability__batch-card-meta {
+    flex-direction: column;
+    gap: 4px;
   }
 }
