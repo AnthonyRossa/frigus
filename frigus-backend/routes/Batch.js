@@ -30,9 +30,10 @@ router.post(
   celebrate({
     body: Joi.object().keys({
       product: Joi.string().required(),
-      batchNumber: Joi.number().min(1).required(),
+      batchNumber: Joi.number().integer().min(1).required(),
       productionDate: Joi.date().iso().required(),
-      quantity: Joi.number().integer().min(1).required(),
+      quantity: Joi.number().precision(3).min(0.001).required(),
+      productionData: Joi.object().optional(),
     }),
   }),
   createBatch,
@@ -48,9 +49,10 @@ router.patch(
     body: Joi.object()
       .keys({
         product: Joi.string().optional(),
-        batchNumber: Joi.number().min(1).optional(),
+        batchNumber: Joi.number().integer().min(1).optional(),
         productionDate: Joi.date().iso().optional(),
-        quantity: Joi.number().integer().min(1).optional(),
+        quantity: Joi.number().precision(3).min(0.001).optional(),
+        productionData: Joi.object().optional(),
       })
       .min(1),
   }),

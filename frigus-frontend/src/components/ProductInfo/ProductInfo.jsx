@@ -1,109 +1,159 @@
-import { useState, useEffect } from "react";
+import { useBatch } from "../../contexts/BatchContext";
+import { getProductName } from "../../utils/utils";
+import availableProducts from "../../utils/products.json";
+import "./ProductInfo.css";
+import { useEffect, useState } from "react";
 import api from "../../utils/api";
 
-export default function ProcessDetail({ batch, product }) {
-  const [logs, setLogs] = useState({});
-  const [loading, setLoading] = useState(false);
+export default function ProductInfo({ onBatchUpdate }) {
+  const { selectedBatch, setSelectedBatch } = useBatch();
+  const [productDetails, setProductDetails] = useState(null);
+  const [formData, setFormData] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState(null);
 
+  const hasSavedProductionData =
+    selectedBatch &&
+    selectedBatch.productionData &&
+    Object.keys(selectedBatch.productionData).length > 0;
+
   useEffect(() => {
-    if (!batch || !product) return;
-
-    const fetchLogs = async () => {
-      setLoading(true);
+    if (!selectedBatch) {
+      setProductDetails(null);
+      setFormData({});
       setError(null);
-      try {
-        const data = await api.getProcessLogsByBatch(batch._id);
-        const logsByStep = {};
-        data.forEach((log) => {
-          if (!logsByStep[log.processId._id])
-            logsByStep[log.processId._id] = {};
-          logsByStep[log.processId._id][log.stepId._id] = log.value;
-        });
-        setLogs(logsByStep);
-      } catch (err) {
-        setError("Failed to load process logs.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      return;
+    }
 
-    fetchLogs();
-  }, [batch, product]);
+    const product = availableProducts.find(
+      (p) => p.id === selectedBatch.productId,
+    );
+    setProductDetails(product);
 
-  const handleSave = async (processId, stepId, value) => {
-    try {
-      await api.createProcessLog({
-        batchId: batch._id,
-        processId,
-        stepId,
-        value,
+    const initialData = {};
+    if (product?.productionSteps) {
+      product.productionSteps.forEach((step) => {
+        initialData[step.key] =
+          selectedBatch.productionData?.[step.key] ??
+          selectedBatch[step.key] ??
+          "";
       });
-      setLogs((prev) => ({
-        ...prev,
-        [processId]: {
-          ...prev[processId],
-          [stepId]: value,
+    }
+    setFormData(initialData);
+  }, [selectedBatch]);
+
+  const handleInputChange = (key, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    if (!selectedBatch || !productDetails) return;
+
+    setIsSaving(true);
+    try {
+      const updatePayload = {
+        productionData: {
+          ...formData,
         },
-      }));
+      };
+
+      const updatedBatch = await api.updateBatch(
+        selectedBatch._id,
+        updatePayload,
+      );
+
+      if (onBatchUpdate) {
+        onBatchUpdate(updatedBatch);
+      } else {
+        setSelectedBatch(updatedBatch);
+      }
+      console.log("Production details saved successfully!", updatedBatch);
     } catch (err) {
-      setError("Failed to save process data.");
+      console.error("Failed to save details:", err);
+      setError("Failed to save production details. Please try again.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  if (!batch) {
-    return <div>Select a batch to view its process details.</div>;
-  }
-
-  if (loading) return <div>Loading process logs...</div>;
-  if (error) return <div>{error}</div>;
-  if (!product) return <div>Product not found.</div>;
-
-  const renderSteps = (steps, processId) => {
-    if (!Array.isArray(steps)) {
-      return <p>No steps defined for this process.</p>;
-    }
-    if (!steps || steps.length === 0) return <p>No steps defined.</p>;
-
+  if (!selectedBatch) {
     return (
-      <div>
-        {steps.map((step) => (
-          <div key={step._id} style={{ marginBottom: "10px" }}>
-            <label>
-              {step.param} ({step.unit || ""}):
-            </label>
-            <input
-              type="text"
-              value={logs[processId]?.[step._id] || ""}
-              onChange={(e) => handleSave(processId, step._id, e.target.value)}
-              placeholder={`Enter ${step.param}`}
-            />
-          </div>
-        ))}
+      <div className="product-info">
+        <p className="product-info__empty">Select a batch to view details</p>
       </div>
     );
-  };
+  }
+
+  if (!productDetails) {
+    return <div className="product-info">Product details not found.</div>;
+  }
 
   return (
-    <div className="process-detail-container">
-      <h3 className="process-detail-title">Process: {product.name}</h3>
-      <p className="process-detail-batch-id">
-        Batch: <strong>{batch.name}</strong>
-      </p>
+    <div className="product-info">
+      <div className="product-info__header">
+        <span className="product-info__header-label">Batch details</span>
+        <h3 className="product-info__title">{productDetails.name}</h3>
+        <p className="product-info__batch">Batch: {selectedBatch.batchNumber}</p>
+      </div>
 
-      {product.processes &&
-      Array.isArray(product.processes) &&
-      product.processes.length > 0 ? (
-        product.processes.map((proc) => (
-          <div key={proc._id} className="process-section">
-            <h4 className="process-section-title">{proc.name}</h4>
-            {proc.description && <p>{proc.description}</p>}
-            {renderSteps(proc.steps, proc._id)}
+      <div className="product-info__section">
+        <h4>Production Data</h4>
+
+        {productDetails.productionSteps &&
+        productDetails.productionSteps.length > 0 ? (
+          <div className="product-info__steps">
+            {productDetails.productionSteps.map((step) => (
+              <div key={step.key} className="product-info__step-group">
+                <label htmlFor={step.key} className="product-info__label">
+                  {step.label}
+                </label>
+                {hasSavedProductionData ? (
+                  <p className="product-info__value">
+                    {selectedBatch.productionData?.[step.key] ?? "-"}
+                  </p>
+                ) : (
+                  <input
+                    id={step.key}
+                    type={step.type}
+                    className="product-info__input"
+                    step="0.001"
+                    placeholder={step.placeholder}
+                    value={formData[step.key] || ""}
+                    onChange={(e) => handleInputChange(step.key, e.target.value)}
+                  />
+                )}
+              </div>
+            ))}
+
+            {!hasSavedProductionData && (
+              <button
+                className="product-info__save-btn"
+                onClick={handleSave}
+                disabled={isSaving}
+              >
+                {isSaving ? "Saving..." : "Save Production Data"}
+              </button>
+            )}
           </div>
-        ))
-      ) : (
-        <p>No Processes defined for this product.</p>
-      )}
-    </div>
+        ) : (
+          <p className="product-info__no-steps">
+            No specific production steps defined for this product.
+          </p>
+        )}
+      </div>
+      <p className="product-info__time">
+        Registered at:{" "}
+        {selectedBatch.createdAt
+          ? new Date(selectedBatch.createdAt).toLocaleString()
+          : "-"}
+      </p>      {selectedBatch.savedAt && (
+        <p className="product-info__time">
+          Saved at: {" "}
+          {new Date(selectedBatch.savedAt).toLocaleString()}
+        </p>
+      )}    </div>
   );
 }
